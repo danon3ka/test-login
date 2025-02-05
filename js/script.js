@@ -21,27 +21,36 @@ const firebaseConfig = {
     e.preventDefault();
     const nickname = document.getElementById('nickname').value.trim();
     const password = document.getElementById('password').value.trim();
-
+  
+    console.log("Проверяем ник:", nickname); // Логируем ник
+  
     try {
       const userRef = db.collection("users").doc(nickname);
       const doc = await userRef.get();
-
+  
       if (!doc.exists) {
+        console.log("Пользователь не найден!");
         alert("Пользователь не найден!");
         return;
       }
-
+  
+      console.log("Данные пользователя:", doc.data()); // Покажем, что загружено
+  
       const storedPassword = doc.data().password;
       if (storedPassword !== password) {
+        console.log("Пароль не совпадает!");
         alert("Неправильный пароль!");
         return;
       }
-
+  
+      console.log("Авторизация успешна!");
       showProtectedContent();
     } catch (error) {
+      console.error("Ошибка Firestore:", error);
       alert("Ошибка входа: " + error.message);
     }
   });
+  
 
   function showProtectedContent() {
     document.getElementById('login').classList.add('hidden');
